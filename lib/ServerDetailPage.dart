@@ -1,12 +1,9 @@
-import 'dart:async';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:lineage2_servers_status/models/server.dart';
 import 'package:lineage2_servers_status/dataUtil.dart' as util;
-import 'dart:math' as math;
-
-math.Random random = new math.Random();
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class ServerDetailPage extends StatefulWidget {
   final Server server;
@@ -20,13 +17,13 @@ class ServerDetailPage extends StatefulWidget {
 class _ServerDetailPage extends State<ServerDetailPage> {
   Server server;
   Timer _timerDetail;
-  List<double> data;
+  List<double> _data;
 
   _ServerDetailPage({this.server});
 
   @override
   void initState() {
-    data = [this.server.playersCount - 1.0, this.server.playersCount + 0.0];
+    _data = [this.server.playersCount - 1.0, this.server.playersCount + 0.0];
     super.initState();
 
     const fiveSeconds = const Duration(seconds: 5);
@@ -42,13 +39,13 @@ class _ServerDetailPage extends State<ServerDetailPage> {
   Future<Null> _refresh() {
     return _fetchData().then((_server) {
       setState(() => server = _server);
-      List<double> _data = new List.from(data)..add(_server.playersCount + 0.0);
-      setState(() => data = _data);
+      List<double> dataResult = new List.from(_data)..add(_server.playersCount + 0.0);
+      setState(() => _data = dataResult);
     });
   }
 
-  Future<Server> _fetchData() async {
-    final response = await http.get('http://l2.laby.fr/status/cache.txt');
+  Future<Server> _fetchData({String serverNameRaw}) async {
+    final response = await http.get(util.URL_L2_LABY_FR);
     if (response.statusCode == 200) {
       return util.refreshDataServer(response.body, server.nameRaw);
     }
@@ -115,7 +112,7 @@ class _ServerDetailPage extends State<ServerDetailPage> {
           height: MediaQuery.of(context).size.height * 0.5,
           padding: EdgeInsets.all(40.0),
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: Color.fromRGBO(28, 26, 23, .9)),
+          decoration: BoxDecoration(color: Color.fromRGBO(16, 10, 6, .9)),
           child: Center(
             child: topContentText,
           ),
@@ -156,7 +153,7 @@ class _ServerDetailPage extends State<ServerDetailPage> {
         ));
 
     final sparklineContent = new Sparkline(
-      data: data,
+      data: _data,
       lineGradient: new LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -169,11 +166,10 @@ class _ServerDetailPage extends State<ServerDetailPage> {
     );
 
     final bottomContent = Container(
-      // height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       color: Theme.of(context).primaryColor,
       padding:
-          EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0), // .all(10.0),
+          EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
       child: Center(
         child: Column(
             children: (server.getTrafficStatus() == "Offline")
