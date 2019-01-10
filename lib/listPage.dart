@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lineage2_servers_status/serverDetailPage.dart';
+import 'package:lineage2_servers_status/detailPage.dart';
 import 'package:lineage2_servers_status/models/server.dart';
 import 'package:lineage2_servers_status/dataUtil.dart' as util;
 import 'package:http/http.dart' as http;
@@ -117,8 +117,7 @@ class _ListPageState extends State<ListPage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        new ServerDetailPage(server: server)));
+                    builder: (context) => new DetailPage(server: server)));
           },
         );
 

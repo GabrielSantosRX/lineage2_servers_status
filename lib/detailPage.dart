@@ -5,21 +5,21 @@ import 'package:lineage2_servers_status/dataUtil.dart' as util;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
-class ServerDetailPage extends StatefulWidget {
+class DetailPage extends StatefulWidget {
   final Server server;
 
-  ServerDetailPage({Key key, this.server}) : super(key: key);
+  DetailPage({Key key, this.server}) : super(key: key);
 
   @override
-  _ServerDetailPage createState() => _ServerDetailPage(server: server);
+  _DetailPage createState() => _DetailPage(server: server);
 }
 
-class _ServerDetailPage extends State<ServerDetailPage> {
+class _DetailPage extends State<DetailPage> {
   Server server;
   Timer _timerDetail;
   List<double> _data;
 
-  _ServerDetailPage({this.server});
+  _DetailPage({this.server});
 
   @override
   void initState() {
