@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lineage2_servers_status/listPage.dart';
 
 void main() => runApp(new L2ssApp());
@@ -6,6 +7,7 @@ void main() => runApp(new L2ssApp());
 class L2ssApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Lineage 2 Servers Status',

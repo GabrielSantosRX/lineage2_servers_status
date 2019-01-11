@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lineage2_servers_status/detailPage.dart';
+import 'package:lineage2_servers_status/aboutPage.dart';
 import 'package:lineage2_servers_status/models/server.dart';
 import 'package:lineage2_servers_status/dataUtil.dart' as util;
 import 'package:http/http.dart' as http;
@@ -29,7 +30,10 @@ class _ListPageState extends State<ListPage> {
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
 
     const fiveSeconds = const Duration(seconds: 5);
-    _timer = new Timer.periodic(fiveSeconds, (Timer t) => _refresh());
+    _timer = new Timer.periodic(
+      fiveSeconds,
+      (Timer t) => _refresh(),
+    );
   }
 
   @override
@@ -44,7 +48,10 @@ class _ListPageState extends State<ListPage> {
       elevation: 0.1,
       backgroundColor: Theme.of(context).primaryColor,
       centerTitle: true,
-      title: Text("Lineage 2 Servers Status"),
+      title: Text(
+        "Lineage 2 Servers Status",
+        style: TextStyle(color: Colors.white, fontSize: 22),
+      ),
     );
 
     final makeBottom = Container(
@@ -55,6 +62,10 @@ class _ListPageState extends State<ListPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             IconButton(
+              icon: Icon(Icons.import_export, color: Colors.white),
+              onPressed: () {},
+            ),
+            IconButton(
               icon: Icon(Icons.refresh, color: Colors.white),
               onPressed: () {
                 _refreshIndicatorKey.currentState.show();
@@ -62,7 +73,14 @@ class _ListPageState extends State<ListPage> {
             ),
             IconButton(
               icon: Icon(Icons.copyright, color: Colors.white),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => new AboutPage(),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -75,8 +93,10 @@ class _ListPageState extends State<ListPage> {
           leading: Container(
             padding: EdgeInsets.only(right: 12.0),
             decoration: new BoxDecoration(
-                border: new Border(
-                    right: new BorderSide(width: 1.0, color: Colors.white24))),
+              border: new Border(
+                right: new BorderSide(width: 1.0, color: Colors.white24),
+              ),
+            ),
             child: server.getStatusIcon(),
           ),
           title: Text(
@@ -86,19 +106,23 @@ class _ListPageState extends State<ListPage> {
           subtitle: Row(
             children: <Widget>[
               Expanded(
-                  flex: 1,
-                  child: Container(
-                      child: LinearProgressIndicator(
-                          backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
-                          value: server.getTrafficIndicator(),
-                          valueColor: AlwaysStoppedAnimation(
-                              server.getTrafficColor())))),
+                flex: 1,
+                child: Container(
+                  child: LinearProgressIndicator(
+                    backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
+                    value: server.getTrafficIndicator(),
+                    valueColor:
+                        AlwaysStoppedAnimation(server.getTrafficColor()),
+                  ),
+                ),
+              ),
               Expanded(
                 flex: 4,
                 child: Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Text(server.country + " " + server.type,
-                        style: TextStyle(color: Colors.white))),
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text(server.country + " " + server.type,
+                      style: TextStyle(color: Colors.white)),
+                ),
               )
             ],
           ),
@@ -115,9 +139,11 @@ class _ListPageState extends State<ListPage> {
           ),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => new DetailPage(server: server)));
+              context,
+              MaterialPageRoute(
+                builder: (context) => new DetailPage(server: server),
+              ),
+            );
           },
         );
 
@@ -131,21 +157,27 @@ class _ListPageState extends State<ListPage> {
         );
 
     final makeBody = Container(
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: _servers.length,
-        itemBuilder: (BuildContext context, int index) {
-          return makeCard(_servers[index]);
-        },
-      ),
-    );
+        child: (_servers.length > 0)
+            ? ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _servers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return makeCard(_servers[index]);
+                },
+              )
+            : Center(
+                child: CircularProgressIndicator(backgroundColor: Colors.red),
+              ));
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: topAppBar,
       body: RefreshIndicator(
-          key: _refreshIndicatorKey, onRefresh: _refresh, child: makeBody),
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        child: makeBody,
+      ),
       bottomNavigationBar: makeBottom,
     );
   }
