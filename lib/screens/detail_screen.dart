@@ -1,33 +1,36 @@
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:lineage2_servers_status/models/server.dart';
-import 'package:lineage2_servers_status/dataUtil.dart' as util;
-import 'package:http/http.dart' as http;
-import 'dart:async';
+import 'package:lineage2_servers_status/utils/crawler.dart' as util;
 
-class DetailPage extends StatefulWidget {
+class DetailScreen extends StatefulWidget {
+  const DetailScreen({Key key, this.server}) : super(key: key);
+
   final Server server;
 
-  DetailPage({Key key, this.server}) : super(key: key);
-
   @override
-  _DetailPage createState() => _DetailPage(server: server);
+  _DetailScreen createState() => _DetailScreen(server: server);
 }
 
-class _DetailPage extends State<DetailPage> {
+class _DetailScreen extends State<DetailScreen> {
+  _DetailScreen({this.server});
+
   Server server;
   Timer _timerDetail;
   List<double> _data;
 
-  _DetailPage({this.server});
-
   @override
   void initState() {
-    _data = [this.server.playersCount - 1.0, this.server.playersCount + 0.0];
+    _data = [server.playersCount - 1.0, server.playersCount + 0.0];
     super.initState();
 
     const fiveSeconds = const Duration(seconds: 5);
-    _timerDetail = new Timer.periodic(fiveSeconds, (Timer t) => _refresh());
+    _timerDetail = Timer.periodic(
+      fiveSeconds,
+      (Timer t) => _refresh(),
+    );
   }
 
   @override
@@ -36,16 +39,17 @@ class _DetailPage extends State<DetailPage> {
     super.dispose();
   }
 
-  Future<Null> _refresh() {
+  Future _refresh() {
     return _fetchData().then((_server) {
       setState(() => server = _server);
-      List<double> dataResult = new List.from(_data)..add(_server.playersCount + 0.0);
+      final List<double> dataResult = List.from(_data)
+        ..add(_server.playersCount + 0.0);
       setState(() => _data = dataResult);
     });
   }
 
   Future<Server> _fetchData({String serverNameRaw}) async {
-    final response = await http.get(util.URL_L2_LABY_FR);
+    final response = await http.get(util.urlL2LabyFr);
     if (response.statusCode == 200) {
       return util.refreshDataServer(response.body, server.nameRaw);
     }
@@ -73,10 +77,10 @@ class _DetailPage extends State<DetailPage> {
         ),
         Container(
           width: 156.0,
-          child: new Divider(color: Colors.white),
+          child: Divider(color: Colors.white),
         ),
         Text(
-          server.country + " " + server.type,
+          "${server.country} ${server.type}",
           style: TextStyle(color: Colors.white, fontSize: 25.0),
         ),
         SizedBox(height: 10.0),
@@ -101,10 +105,10 @@ class _DetailPage extends State<DetailPage> {
         Container(
             padding: EdgeInsets.only(left: 10.0),
             height: MediaQuery.of(context).size.height * 0.5,
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage(
-                    "assets/" + server.type.toLowerCase() + "_paper.jpg"),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image:
+                    AssetImage("assets/${server.type.toLowerCase()}_paper.jpg"),
                 fit: BoxFit.cover,
               ),
             )),
@@ -112,7 +116,7 @@ class _DetailPage extends State<DetailPage> {
           height: MediaQuery.of(context).size.height * 0.5,
           padding: EdgeInsets.all(40.0),
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: Color.fromRGBO(16, 10, 6, .9)),
+          decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, .9)),
           child: Center(
             child: topContentText,
           ),
@@ -122,6 +126,7 @@ class _DetailPage extends State<DetailPage> {
           top: 60.0,
           child: InkWell(
             onTap: () {
+              _timerDetail.cancel();
               Navigator.pop(context);
             },
             child: Icon(Icons.arrow_back, color: Colors.white),
@@ -152,9 +157,9 @@ class _DetailPage extends State<DetailPage> {
               style: TextStyle(color: Colors.white)),
         ));
 
-    final sparklineContent = new Sparkline(
+    final sparklineContent = Sparkline(
       data: _data,
-      lineGradient: new LinearGradient(
+      lineGradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [Colors.redAccent[400], Colors.amber],
@@ -168,8 +173,7 @@ class _DetailPage extends State<DetailPage> {
     final bottomContent = Container(
       width: MediaQuery.of(context).size.width,
       color: Theme.of(context).primaryColor,
-      padding:
-          EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
       child: Center(
         child: Column(
             children: (server.getTrafficStatus() == "Offline")

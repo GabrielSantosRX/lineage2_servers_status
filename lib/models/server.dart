@@ -3,23 +3,23 @@ import 'package:flutter/material.dart' show Colors, Icons;
 import 'package:flutter/widgets.dart' show Icon;
 
 class Server {
+  Server(this.name, this.nameRaw, this.type, this.country,
+      [this.playersCount = 0]);
+
   String name;
   String nameRaw;
   String type;
   String country;
   int playersCount;
 
-  Server(this.name, this.nameRaw, this.type, this.country,
-      [this.playersCount = 0]);
-
   Icon getStatusIcon() {
-    return (this.playersCount <= 0)
+    return (playersCount <= 0)
         ? Icon(Icons.cancel, color: Color.fromRGBO(232, 53, 83, 1.0))
         : Icon(Icons.beenhere, color: Colors.green[400]);
   }
 
   double getTrafficIndicator() {
-    return (((this.playersCount * 100.00) / 6000.00) / 100.00);
+    return ((playersCount * 100.00) / 6000.00) / 100.00;
   }
 
   String getTrafficStatus() {
@@ -50,6 +50,6 @@ class Server {
 
   @override
   String toString() {
-    return this.name + ": " + this.playersCount.toString();
+    return "$name: ${playersCount.toString()}";
   }
 }

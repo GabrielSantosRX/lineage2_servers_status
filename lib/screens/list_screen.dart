@@ -1,39 +1,54 @@
-import 'package:flutter/material.dart';
-import 'package:lineage2_servers_status/detailPage.dart';
-import 'package:lineage2_servers_status/aboutPage.dart';
-import 'package:lineage2_servers_status/models/server.dart';
-import 'package:lineage2_servers_status/dataUtil.dart' as util;
-import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:lineage2_servers_status/models/server.dart';
+import 'package:lineage2_servers_status/screens/about_screen.dart';
+import 'package:lineage2_servers_status/screens/detail_screen.dart';
+import 'package:lineage2_servers_status/utils/crawler.dart' as util;
 
-class ListPage extends StatefulWidget {
+class ListScreen extends StatefulWidget {
+  const ListScreen({Key key, this.title}) : super(key: key);
+
   final String title;
 
-  ListPage({Key key, this.title}) : super(key: key);
-
   @override
-  _ListPageState createState() => _ListPageState();
+  _ListScreenState createState() => _ListScreenState();
 }
 
-class _ListPageState extends State<ListPage> {
+class _ListScreenState extends State<ListScreen> {
   Timer _timer;
   List<Server> _servers;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
-    _servers = new List<Server>();
+    _servers = List<Server>();
     super.initState();
 
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
 
     const fiveSeconds = const Duration(seconds: 5);
-    _timer = new Timer.periodic(
+    _timer = Timer.periodic(
       fiveSeconds,
       (Timer t) => _refresh(),
     );
+  }
+
+  Future _refresh() {
+    if (Navigator.of(context).canPop()) return null;
+
+    return _fetchData().then((serversResult) {
+      setState(() => _servers = serversResult);
+    });
+  }
+
+  Future<List<Server>> _fetchData() async {
+    final response = await http.get(util.urlL2LabyFr);
+    if (response.statusCode == 200) {
+      return util.refreshDataServers(response.body);
+    }
+    return null;
   }
 
   @override
@@ -77,7 +92,7 @@ class _ListPageState extends State<ListPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => new AboutPage(),
+                    builder: (context) => AboutScreen(),
                   ),
                 );
               },
@@ -92,9 +107,9 @@ class _ListPageState extends State<ListPage> {
               EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           leading: Container(
             padding: EdgeInsets.only(right: 12.0),
-            decoration: new BoxDecoration(
-              border: new Border(
-                right: new BorderSide(width: 1.0, color: Colors.white24),
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(width: 1.0, color: Colors.white24),
               ),
             ),
             child: server.getStatusIcon(),
@@ -120,7 +135,7 @@ class _ListPageState extends State<ListPage> {
                 flex: 4,
                 child: Padding(
                   padding: EdgeInsets.only(left: 10.0),
-                  child: Text(server.country + " " + server.type,
+                  child: Text("${server.country} ${server.type}",
                       style: TextStyle(color: Colors.white)),
                 ),
               )
@@ -141,7 +156,7 @@ class _ListPageState extends State<ListPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => new DetailPage(server: server),
+                builder: (context) => DetailScreen(server: server),
               ),
             );
           },
@@ -149,7 +164,7 @@ class _ListPageState extends State<ListPage> {
 
     Card makeCard(Server server) => Card(
           elevation: 8.0,
-          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
           child: Container(
             decoration: BoxDecoration(color: Color.fromRGBO(16, 10, 6, .9)),
             child: makeListTile(server),
@@ -157,7 +172,7 @@ class _ListPageState extends State<ListPage> {
         );
 
     final makeBody = Container(
-        child: (_servers.length > 0)
+        child: (_servers.isNotEmpty)
             ? ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -182,19 +197,5 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  Future<Null> _refresh() {
-    if (Navigator.of(context).canPop()) return null;
-
-    return _fetchData().then((serversResult) {
-      setState(() => _servers = serversResult);
-    });
-  }
-
-  Future<List<Server>> _fetchData() async {
-    final response = await http.get(util.URL_L2_LABY_FR);
-    if (response.statusCode == 200) {
-      return util.refreshDataServers(response.body);
-    }
-    return null;
-  }
+  
 }

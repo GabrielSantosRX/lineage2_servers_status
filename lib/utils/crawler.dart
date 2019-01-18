@@ -1,6 +1,6 @@
 import 'package:lineage2_servers_status/models/server.dart';
 
-const String URL_L2_LABY_FR = 'http://l2.laby.fr/status/cache.txt';
+const String urlL2LabyFr = 'http://l2.laby.fr/status/cache.txt';
 
 Server refreshDataServer(String dataRaw, String nameRaw) {
   if (dataRaw.isEmpty) return null;
@@ -14,11 +14,11 @@ List<Server> refreshDataServers(String dataRaw, {String filter}) {
   var serversList = _dataSanitization(dataRaw);
 
   if (filter != null && filter.isNotEmpty)
-    serversList = new List<String>()..add(serversList.firstWhere((s) => s.contains(filter)));
+    serversList = List<String>()..add(serversList.firstWhere((s) => s.contains(filter)));
 
-  var serversUpdated = serversList.map((row) => _buildServerData(row)).toList();
+  final serversUpdated = serversList.map((row) => _buildServerData(row)).toList();
 
-  List<Server> servers = new List<Server>();
+  final List<Server> servers = List<Server>();
   for (var s in _serversDefault) {
     if(filter == null) {
       servers.add(_refreshServer(s, serversUpdated));
@@ -31,7 +31,7 @@ List<Server> refreshDataServers(String dataRaw, {String filter}) {
 }
 
 List<String> _dataSanitization(String dataRaw) {
-  var dataRawFiltered = dataRaw
+  final dataRawFiltered = dataRaw
       .replaceAll('<table class="status_table">', '')
       .replaceAll('</table>', '')
       .replaceAll('<tr><td class="server_name" nowrap>- ', '')
@@ -43,7 +43,7 @@ List<String> _dataSanitization(String dataRaw) {
       .replaceAll('">', '|')
       .trim();
 
-  var serversList =
+  final serversList =
       dataRawFiltered.substring(0, dataRawFiltered.length - 1).split(';');
   return serversList;
 }
@@ -51,7 +51,7 @@ List<String> _dataSanitization(String dataRaw) {
 Server _refreshServer(Server server, List<MapEntry> serversUpdated) {
   for (var su in serversUpdated) {
     if (su.key.contains(server.nameRaw)) {
-      return new Server(
+      return Server(
           server.name, server.nameRaw, server.type, server.country, su.value);
     }
   }
@@ -59,14 +59,14 @@ Server _refreshServer(Server server, List<MapEntry> serversUpdated) {
 }
 
 MapEntry _buildServerData(String row) {
-  List<String> dataRow = row.split('|');
+  final List<String> dataRow = row.split('|');
 
-  String name = dataRow.first;
+  final String name = dataRow.first;
   int players = int.tryParse(dataRow.last);
 
-  if (players == null) players = 0;
+  players ??= 0;
 
-  return new MapEntry(name, players);
+  return MapEntry(name, players);
 }
 
 final List<Server> _serversDefault = [
