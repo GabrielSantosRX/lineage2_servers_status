@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class AboutScreen extends StatelessWidget {
   @override
@@ -6,10 +7,63 @@ class AboutScreen extends StatelessWidget {
     final makeBody = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) {
         return SingleChildScrollView(
+          padding: EdgeInsets.all(30),
           child: ConstrainedBox(
-            constraints:
-                BoxConstraints(minHeight: viewportConstraints.maxHeight),
+            constraints: BoxConstraints(
+              minHeight: viewportConstraints.maxHeight,
+            ),
             child: Column(children: [
+              SizedBox(width: 30),
+              Text(
+                'This app has open source.',
+                style: TextStyle(color: Colors.amberAccent),
+              ),
+              Text(
+                'Developed by:',
+                style: TextStyle(color: Colors.amberAccent),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundImage: AssetImage('assets/gabriel_santos.jpeg'),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'Gabriel Santos',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundImage: AssetImage('assets/github_logo.png'),
+                  ),
+                  SizedBox(width: 10),
+                  InkWell(
+                    child: Text('/Gabriel-Araujo/lineage2_servers_status',
+                        style: TextStyle(color: Colors.amberAccent[100])),
+                    onTap: () => url_launcher.launch(
+                        'https://github.com/Gabriel-Araujo/lineage2_servers_status'),
+                  ),
+                ],
+              ),
+              Text(
+                'All data displayed has a source on the website:',
+                style: TextStyle(color: Colors.white),
+              ),
+              InkWell(
+                child: Text('http://l2.laby.fr/status/',
+                    style: TextStyle(color: Colors.amberAccent[100])),
+                onTap: () => url_launcher.launch(
+                    'http://l2.laby.fr/status/'),
+              ),
+              SizedBox(height: 10.0),
+              Divider(color: Colors.amber),
+              SizedBox(height: 10.0),
+              Image.asset('assets/l2_logo.png'),
               Text(
                 '"Lineage 2" is a registered trademark of',
                 style: TextStyle(color: Colors.white),
@@ -22,57 +76,43 @@ class AboutScreen extends StatelessWidget {
                 'All rights reserved.',
                 style: TextStyle(color: Colors.white),
               ),
-              Divider(color: Colors.white),
-              Text(
-                'All data displayed has a source on the website:',
-                style: TextStyle(color: Colors.white),
-              ),
-              Text(
-                'http://l2.laby.fr/status/',
-                style: TextStyle(color: Colors.white),
-              ),
-              Divider(color: Colors.white),
+              SizedBox(height: 10.0),
+              Divider(color: Colors.amber),
+              SizedBox(height: 10.0),
               Text(
                 'This app was developed using:',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.amberAccent),
               ),
-              Text(
-                'Flutter',
-                style: TextStyle(color: Colors.white),
+              SizedBox(height: 10.0),
+              Image.asset('assets/flutter_logo.png'),
+              InkWell(
+                child: Text('https://github.com/flutter/flutter',
+                    style: TextStyle(color: Colors.amberAccent[100])),
+                onTap: () => url_launcher.launch(
+                    'https://github.com/flutter/flutter'),
               ),
-              Text(
-                'https://github.com/flutter/flutter',
-                style: TextStyle(color: Colors.white),
+              InkWell(
+                child: Text('https://github.com/xqwzts/flutter_sparkline',
+                    style: TextStyle(color: Colors.amberAccent[100])),
+                onTap: () => url_launcher.launch(
+                    'https://github.com/xqwzts/flutter_sparkline'),
               ),
-              Text(
-                'https://github.com/xqwzts/flutter_sparkline',
-                style: TextStyle(color: Colors.white),
+              SizedBox(height: 10.0),
+              Image.asset('assets/dart_logo.png'),
+              InkWell(
+                child: Text('https://github.com/dart-lang',
+                    style: TextStyle(color: Colors.amberAccent[100])),
+                onTap: () => url_launcher.launch(
+                    'https://github.com/dart-lang'),
               ),
-              Text(
-                'Dart',
-                style: TextStyle(color: Colors.white),
-              ),
-              Text(
-                'https://github.com/dart-lang',
-                style: TextStyle(color: Colors.white),
-              ),
-              Divider(color: Colors.white),
-              Text(
-                'This app has open source:',
-                style: TextStyle(color: Colors.white),
-              ),
-              Text(
-                'Developed by:',
-                style: TextStyle(color: Colors.white),
-              ),
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/gabriel_santos.jpeg'),
-              ),
-              Divider(color: Colors.white),
+              SizedBox(height: 10.0),
+              Divider(color: Colors.amber),
+              SizedBox(height: 10.0),
               Text(
                 'Thank you for using this app!',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
+              SizedBox(width: 30)
             ]),
           ),
         );
@@ -80,14 +120,10 @@ class AboutScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Color.fromRGBO(16, 10, 6, 1),
       appBar: AppBar(
-        elevation: 0.1,
-        centerTitle: true,
-        title: Text(
-          "About",
-          style: TextStyle(color: Colors.white, fontSize: 22),
-        ),
+        title: Text("About"),
+        backgroundColor: Colors.black,
       ),
       body: makeBody,
     );

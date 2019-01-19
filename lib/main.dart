@@ -11,7 +11,7 @@ class L2ssApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Lineage 2 Servers Status',
-      theme: ThemeData(primaryColor: Color.fromRGBO(0, 0, 0, 1.0)),
+      theme: ThemeData(canvasColor: Colors.grey[900], primaryColor: Color.fromRGBO(0, 0, 0, 1.0)),
       home: ListScreen(title: 'Lineage 2 Servers Status'),
     );
   }

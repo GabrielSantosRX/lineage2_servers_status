@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
@@ -129,7 +130,9 @@ class _DetailScreen extends State<DetailScreen> {
               _timerDetail.cancel();
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back, color: Colors.white),
+            child: Icon(
+                (Platform.isIOS) ? Icons.arrow_back_ios : Icons.arrow_back,
+                color: Colors.white),
           ),
         )
       ],

@@ -51,6 +51,15 @@ class _ListScreenState extends State<ListScreen> {
     return null;
   }
 
+  void showAboutScreen(String _){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AboutScreen(),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -60,46 +69,20 @@ class _ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
     final topAppBar = AppBar(
-      elevation: 0.1,
+      //elevation: 0.1,
       backgroundColor: Theme.of(context).primaryColor,
-      centerTitle: true,
-      title: Text(
-        "Lineage 2 Servers Status",
-        style: TextStyle(color: Colors.white, fontSize: 22),
-      ),
-    );
-
-    final makeBottom = Container(
-      height: 55.0,
-      child: BottomAppBar(
-        color: Theme.of(context).primaryColor,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.import_export, color: Colors.white),
-              onPressed: () {},
+      title: Text("Lineage 2 Servers Status"),
+      actions: <Widget>[
+        PopupMenuButton<String>(
+              onSelected: showAboutScreen,
+              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                const PopupMenuItem<String>(
+                  value: 'About',
+                  child: Text('About')
+                ),
+              ],
             ),
-            IconButton(
-              icon: Icon(Icons.refresh, color: Colors.white),
-              onPressed: () {
-                _refreshIndicatorKey.currentState.show();
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.copyright, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AboutScreen(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      ]
     );
 
     ListTile makeListTile(Server server) => ListTile(
@@ -182,7 +165,7 @@ class _ListScreenState extends State<ListScreen> {
                 },
               )
             : Center(
-                child: CircularProgressIndicator(backgroundColor: Colors.red),
+                child: CircularProgressIndicator(),
               ));
 
     return Scaffold(
@@ -193,9 +176,6 @@ class _ListScreenState extends State<ListScreen> {
         onRefresh: _refresh,
         child: makeBody,
       ),
-      bottomNavigationBar: makeBottom,
     );
   }
-
-  
 }
