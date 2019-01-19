@@ -22,6 +22,7 @@ class AboutScreen extends StatelessWidget {
                 'Developed by:',
                 style: TextStyle(color: Colors.amberAccent),
               ),
+              SizedBox(width: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

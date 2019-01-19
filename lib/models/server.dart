@@ -43,7 +43,7 @@ class Server {
     else if (playersCount >= 5000)
       return Color.fromRGBO(232, 53, 83, 1.0); // #E83553
     else if (playersCount >= 2500)
-      return Colors.amber;
+      return Colors.amberAccent;
     else
       return Colors.cyan;
   }
