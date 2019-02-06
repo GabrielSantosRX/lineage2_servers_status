@@ -58,13 +58,15 @@ class AboutScreen extends StatelessWidget {
               InkWell(
                 child: Text('http://l2.laby.fr/status/',
                     style: TextStyle(color: Colors.amberAccent[100])),
-                onTap: () => url_launcher.launch(
-                    'http://l2.laby.fr/status/'),
+                onTap: () => url_launcher.launch('http://l2.laby.fr/status/'),
               ),
               SizedBox(height: 10.0),
               Divider(color: Colors.amber),
               SizedBox(height: 10.0),
-              Image.asset('assets/l2_logo.png'),
+              Padding(
+                padding: EdgeInsets.all(30),
+                child: Image.asset('assets/l2_logo.png'),
+              ),
               Text(
                 '"Lineage 2" is a registered trademark of',
                 style: TextStyle(color: Colors.white),
@@ -85,26 +87,32 @@ class AboutScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.amberAccent),
               ),
               SizedBox(height: 10.0),
-              Image.asset('assets/flutter_logo.png'),
+              Padding(
+                padding: EdgeInsets.all(30),
+                child: Image.asset('assets/flutter_logo.png'),
+              ),
               InkWell(
                 child: Text('https://github.com/flutter/flutter',
                     style: TextStyle(color: Colors.amberAccent[100])),
-                onTap: () => url_launcher.launch(
-                    'https://github.com/flutter/flutter'),
+                onTap: () =>
+                    url_launcher.launch('https://github.com/flutter/flutter'),
               ),
               InkWell(
                 child: Text('https://github.com/xqwzts/flutter_sparkline',
                     style: TextStyle(color: Colors.amberAccent[100])),
-                onTap: () => url_launcher.launch(
-                    'https://github.com/xqwzts/flutter_sparkline'),
+                onTap: () => url_launcher
+                    .launch('https://github.com/xqwzts/flutter_sparkline'),
               ),
               SizedBox(height: 10.0),
-              Image.asset('assets/dart_logo.png'),
+              Padding(
+                padding: EdgeInsets.all(30),
+                child: Image.asset('assets/dart_logo.png'),
+              ),
               InkWell(
                 child: Text('https://github.com/dart-lang',
                     style: TextStyle(color: Colors.amberAccent[100])),
-                onTap: () => url_launcher.launch(
-                    'https://github.com/dart-lang'),
+                onTap: () =>
+                    url_launcher.launch('https://github.com/dart-lang'),
               ),
               SizedBox(height: 10.0),
               Divider(color: Colors.amber),

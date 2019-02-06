@@ -21,10 +21,14 @@ class _DetailScreen extends State<DetailScreen> {
   Server server;
   Timer _timerDetail;
   List<double> _data;
+  AlarmStatus _alarm = AlarmStatus.enabled;
 
   @override
   void initState() {
     _data = [server.playersCount - 1.0, server.playersCount + 0.0];
+    if (server.playersCount > 0) {
+      _alarm = AlarmStatus.disabled;
+    }
     super.initState();
 
     const fiveSeconds = const Duration(seconds: 5);
@@ -43,9 +47,18 @@ class _DetailScreen extends State<DetailScreen> {
   Future _refresh() {
     return _fetchData().then((_server) {
       setState(() => server = _server);
+
       final List<double> dataResult = List.from(_data)
         ..add(_server.playersCount + 0.0);
       setState(() => _data = dataResult);
+
+      if(_alarm != AlarmStatus.activated){
+        if (_server.playersCount > 0) {
+          setState(() => _alarm = AlarmStatus.disabled);
+        } else {
+          setState(() => _alarm = AlarmStatus.enabled);
+        }
+      }
     });
   }
 
@@ -131,8 +144,9 @@ class _DetailScreen extends State<DetailScreen> {
               Navigator.pop(context);
             },
             child: Icon(
-                (Platform.isIOS) ? Icons.arrow_back_ios : Icons.arrow_back,
-                color: Colors.white),
+              (Platform.isIOS) ? Icons.arrow_back_ios : Icons.arrow_back,
+              color: Colors.white,
+            ),
           ),
         )
       ],
@@ -151,12 +165,31 @@ class _DetailScreen extends State<DetailScreen> {
           )
         ]);
 
+    void alarmOnPressed() {
+      print('alarm activated');
+      setState(() => _alarm = AlarmStatus.activated);
+    }
+
+    void alarmRunningOnPressed() {
+      print('alarm Stopped');
+      setState(() => _alarm = AlarmStatus.disabled);
+    }
+
     final alarmButton = Padding(
         padding: EdgeInsets.symmetric(vertical: 16.0),
         child: RaisedButton(
-          onPressed: () => {},
+          onPressed: alarmOnPressed, //() => {},
           color: Color.fromRGBO(232, 53, 83, 1.0),
           child: Text("SET ALARM WHEN ONLINE",
+              style: TextStyle(color: Colors.white)),
+        ));
+
+    final alarmRunningButton = Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: RaisedButton(
+          onPressed: alarmRunningOnPressed,
+          color: Color.fromRGBO(232, 53, 83, 1.0),
+          child: Text("CANCEL ALARM",
               style: TextStyle(color: Colors.white)),
         ));
 
@@ -173,23 +206,43 @@ class _DetailScreen extends State<DetailScreen> {
       pointColor: Colors.yellow,
     );
 
+    List<Widget> showBottomContent() {
+      switch (_alarm) {
+        case AlarmStatus.enabled:
+          return <Widget>[
+            SizedBox(height: 10.0),
+            bottomContentText,
+            alarmButton,
+            Text('Alarm state = ${_alarm.toString()}'),
+          ];
+          break;
+        case AlarmStatus.activated:
+          return <Widget>[
+            SizedBox(height: 10.0),
+            bottomContentText,
+            alarmRunningButton,
+            Text('Alarm state = ${_alarm.toString()}'),
+          ];
+          break;
+        case AlarmStatus.disabled:
+        default:
+          return <Widget>[
+            sparklineContent,
+            SizedBox(height: 10.0),
+            bottomContentText
+          ];
+          break;
+      }
+    }
+
     final bottomContent = Container(
       width: MediaQuery.of(context).size.width,
       color: Theme.of(context).primaryColor,
       padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
       child: Center(
         child: Column(
-            children: (server.getTrafficStatus() == "Offline")
-                ? <Widget>[
-                    SizedBox(height: 10.0),
-                    bottomContentText,
-                    alarmButton
-                  ]
-                : <Widget>[
-                    sparklineContent,
-                    SizedBox(height: 10.0),
-                    bottomContentText
-                  ]),
+          children: showBottomContent(),
+        ),
       ),
     );
 
@@ -200,4 +253,11 @@ class _DetailScreen extends State<DetailScreen> {
       ),
     );
   }
+}
+
+enum AlarmStatus {
+  disabled, // invisible
+  enabled,  // visible
+  activated,
+  playing
 }
