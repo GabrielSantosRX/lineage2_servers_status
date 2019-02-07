@@ -52,11 +52,17 @@ class _DetailScreen extends State<DetailScreen> {
         ..add(_server.playersCount + 0.0);
       setState(() => _data = dataResult);
 
-      if(_alarm != AlarmStatus.activated){
-        if (_server.playersCount > 0) {
-          setState(() => _alarm = AlarmStatus.disabled);
+      if(_alarm != AlarmStatus.playing){
+        if(_alarm != AlarmStatus.activated){
+          if (_server.playersCount > 0) {
+            setState(() => _alarm = AlarmStatus.disabled);
+          } else {
+            setState(() => _alarm = AlarmStatus.enabled);
+          }
         } else {
-          setState(() => _alarm = AlarmStatus.enabled);
+          if (_server.playersCount > 0) {
+            setState(() => _alarm = AlarmStatus.playing);
+          }
         }
       }
     });
@@ -193,6 +199,15 @@ class _DetailScreen extends State<DetailScreen> {
               style: TextStyle(color: Colors.white)),
         ));
 
+    final alarmPlayingButton = Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: RaisedButton(
+          onPressed: alarmRunningOnPressed,
+          color: Color.fromRGBO(232, 53, 83, 1.0),
+          child: Text("STOP ALARM",
+              style: TextStyle(color: Colors.white)),
+        ));
+
     final sparklineContent = Sparkline(
       data: _data,
       lineGradient: LinearGradient(
@@ -221,6 +236,15 @@ class _DetailScreen extends State<DetailScreen> {
             SizedBox(height: 10.0),
             bottomContentText,
             alarmRunningButton,
+            Text('Alarm state = ${_alarm.toString()}'),
+          ];
+          break;
+        case AlarmStatus.playing:
+          return <Widget>[
+            sparklineContent,
+            SizedBox(height: 10.0),
+            bottomContentText,
+            alarmPlayingButton,
             Text('Alarm state = ${_alarm.toString()}'),
           ];
           break;
