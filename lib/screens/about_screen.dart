@@ -88,7 +88,7 @@ class AboutScreen extends StatelessWidget {
               ),
               SizedBox(height: 10.0),
               Padding(
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.fromLTRB(60, 30, 60, 20),
                 child: Image.asset('assets/flutter_logo.png'),
               ),
               InkWell(
@@ -105,7 +105,7 @@ class AboutScreen extends StatelessWidget {
               ),
               SizedBox(height: 10.0),
               Padding(
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.fromLTRB(60, 30, 60, 20),
                 child: Image.asset('assets/dart_logo.png'),
               ),
               InkWell(

@@ -1,12 +1,10 @@
 import 'package:lineage2_servers_status/models/server.dart';
 
 // 'http://l2.laby.fr/status/cache.txt';
-const String urlL2LabyFr = 'https://gist.githubusercontent.com/Gabriel-Araujo/46d7cf6e0b78817c35ef29b48a524c71/raw/370c9aa27fa79542a0c9a14fb5c6121aa970740a/cache.txt'; 
+const String urlL2LabyFr = 'https://gist.githubusercontent.com/Gabriel-Araujo/46d7cf6e0b78817c35ef29b48a524c71/raw/370c9aa27fa79542a0c9a14fb5c6121aa970740a/cache.txt';
 //const String urlL2LabyFr = 'https://gist.githubusercontent.com/Gabriel-Araujo/3b78a378cbedca1469b2f55aa74a73bd/raw/5f595443b33855d3943dfafbf8631c9460a411c5/cacheAdenUp.txt';
 
 Server refreshDataServer(String dataRaw, String nameRaw) {
-  if (dataRaw.isEmpty) return null;
-
   return refreshDataServers(dataRaw, filter: nameRaw).first;
 }
 
@@ -16,15 +14,17 @@ List<Server> refreshDataServers(String dataRaw, {String filter}) {
   var serversList = _dataSanitization(dataRaw);
 
   if (filter != null && filter.isNotEmpty)
-    serversList = List<String>()..add(serversList.firstWhere((s) => s.contains(filter)));
+    serversList = List<String>()
+      ..add(serversList.firstWhere((s) => s.contains(filter)));
 
-  final serversUpdated = serversList.map((row) => _buildServerData(row)).toList();
+  final serversUpdated =
+      serversList.map((row) => _buildServerData(row)).toList();
 
   final List<Server> servers = List<Server>();
   for (var s in _serversDefault) {
-    if(filter == null) {
+    if (filter == null) {
       servers.add(_refreshServer(s, serversUpdated));
-    } else if(filter == s.nameRaw){
+    } else if (filter == s.nameRaw) {
       servers.add(_refreshServer(s, serversUpdated));
       break;
     }

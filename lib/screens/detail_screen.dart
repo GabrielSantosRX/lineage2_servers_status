@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:lineage2_servers_status/models/server.dart';
 import 'package:lineage2_servers_status/utils/crawler.dart' as util;
@@ -22,6 +23,7 @@ class _DetailScreen extends State<DetailScreen> {
   Timer _timerDetail;
   List<double> _data;
   AlarmStatus _alarm = AlarmStatus.enabled;
+  final AudioCache _audioCache = AudioCache();
 
   @override
   void initState() {
@@ -62,10 +64,23 @@ class _DetailScreen extends State<DetailScreen> {
         } else {
           if (_server.playersCount > 0) {
             setState(() => _alarm = AlarmStatus.playing);
+            _audioCache.play('lineage_2_quest.mp3');
           }
         }
+      } else {
+        _audioCache.play('lineage_2_quest.mp3');
       }
     });
+  }
+
+  void alarmOnPressed() {
+    print('alarm activated');
+    setState(() => _alarm = AlarmStatus.activated);
+  }
+
+  void alarmRunningOnPressed() {
+    print('alarm Stopped');
+    setState(() => _alarm = AlarmStatus.disabled);
   }
 
   Future<Server> _fetchData({String serverNameRaw}) async {
@@ -171,16 +186,6 @@ class _DetailScreen extends State<DetailScreen> {
           )
         ]);
 
-    void alarmOnPressed() {
-      print('alarm activated');
-      setState(() => _alarm = AlarmStatus.activated);
-    }
-
-    void alarmRunningOnPressed() {
-      print('alarm Stopped');
-      setState(() => _alarm = AlarmStatus.disabled);
-    }
-
     final alarmButton = Padding(
         padding: EdgeInsets.symmetric(vertical: 16.0),
         child: RaisedButton(
@@ -228,15 +233,15 @@ class _DetailScreen extends State<DetailScreen> {
             SizedBox(height: 10.0),
             bottomContentText,
             alarmButton,
-            Text('Alarm state = ${_alarm.toString()}'),
+            Text('If you enable the alarm, when the server returns to the online state, the adventure call will sound.', textAlign: TextAlign.center,),
           ];
           break;
         case AlarmStatus.activated:
           return <Widget>[
             SizedBox(height: 10.0),
-            bottomContentText,
+            CircularProgressIndicator(),
             alarmRunningButton,
-            Text('Alarm state = ${_alarm.toString()}'),
+            Text('...wait for it...', textAlign: TextAlign.center,),
           ];
           break;
         case AlarmStatus.playing:
@@ -245,7 +250,7 @@ class _DetailScreen extends State<DetailScreen> {
             SizedBox(height: 10.0),
             bottomContentText,
             alarmPlayingButton,
-            Text('Alarm state = ${_alarm.toString()}'),
+            Text('Tap to stop the alarm', textAlign: TextAlign.center,),
           ];
           break;
         case AlarmStatus.disabled:
