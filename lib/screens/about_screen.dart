@@ -103,6 +103,12 @@ class AboutScreen extends StatelessWidget {
                 onTap: () => url_launcher
                     .launch('https://github.com/xqwzts/flutter_sparkline'),
               ),
+              InkWell(
+                child: Text('https://github.com/luanpotter/audioplayers',
+                    style: TextStyle(color: Colors.amberAccent[100])),
+                onTap: () => url_launcher
+                    .launch('https://github.com/luanpotter/audioplayers'),
+              ),
               SizedBox(height: 10.0),
               Padding(
                 padding: EdgeInsets.fromLTRB(60, 30, 60, 20),
