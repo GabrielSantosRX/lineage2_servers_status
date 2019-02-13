@@ -28,7 +28,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-    
+
   flutter_launcher_icons: "^0.7.0"
   
 flutter_icons:
@@ -51,6 +51,7 @@ flutter:
     - assets/classic_paper.jpg
     - assets/_paper.jpg
     - assets/gabriel_santos.jpeg
+    - assets/icon_appbar.png
     - assets/lineage_2_quest.mp3
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

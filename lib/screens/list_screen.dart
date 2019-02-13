@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:lineage2_servers_status/models/server.dart';
@@ -51,7 +52,7 @@ class _ListScreenState extends State<ListScreen> {
     return null;
   }
 
-  void showAboutScreen(String _){
+  void showAboutScreen(String _) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -69,21 +70,23 @@ class _ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
     final topAppBar = AppBar(
-      //elevation: 0.1,
-      backgroundColor: Theme.of(context).primaryColor,
-      title: Text("Lineage 2 Servers Status"),
-      actions: <Widget>[
-        PopupMenuButton<String>(
-              onSelected: showAboutScreen,
-              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                const PopupMenuItem<String>(
-                  value: 'About',
-                  child: Text('About')
-                ),
-              ],
-            ),
-      ]
-    );
+        //elevation: 0.1,
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text("Lineage 2 Servers Status"),
+        leading: (!Platform.isIOS)
+            ? Padding(
+                padding: EdgeInsets.fromLTRB(16, 10, 10, 10),
+                child: Image.asset('assets/icon_appbar.png', fit: BoxFit.cover))
+            : null,
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: showAboutScreen,
+            itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                  const PopupMenuItem<String>(
+                      value: 'About', child: Text('About')),
+                ],
+          ),
+        ]);
 
     ListTile makeListTile(Server server) => ListTile(
           contentPadding:
