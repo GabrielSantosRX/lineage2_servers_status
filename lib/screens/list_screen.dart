@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:lineage2_servers_status/models/server.dart';
@@ -175,7 +174,7 @@ class _ListScreenState extends State<ListScreen> {
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: _refresh,
-        child: makeBody,
+        child: SafeArea(child: makeBody),
       ),
     );
   }
