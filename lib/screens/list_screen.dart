@@ -73,11 +73,9 @@ class _ListScreenState extends State<ListScreen> {
         //elevation: 0.1,
         backgroundColor: Theme.of(context).primaryColor,
         title: Text("Lineage 2 Servers Status"),
-        leading: (!Platform.isIOS)
-            ? Padding(
-                padding: EdgeInsets.fromLTRB(16, 10, 10, 10),
-                child: Image.asset('assets/icon_appbar.png', fit: BoxFit.cover))
-            : null,
+        leading: Padding(
+            padding: EdgeInsets.fromLTRB(16, 10, 10, 10),
+            child: Image.asset('assets/icon_appbar.png', fit: BoxFit.cover)),
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: showAboutScreen,
