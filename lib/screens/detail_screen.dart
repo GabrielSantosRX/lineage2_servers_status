@@ -54,8 +54,8 @@ class _DetailScreen extends State<DetailScreen> {
         ..add(_server.playersCount + 0.0);
       setState(() => _data = dataResult);
 
-      if(_alarm != AlarmStatus.playing){
-        if(_alarm != AlarmStatus.activated){
+      if (_alarm != AlarmStatus.playing) {
+        if (_alarm != AlarmStatus.activated) {
           if (_server.playersCount > 0) {
             setState(() => _alarm = AlarmStatus.disabled);
           } else {
@@ -200,8 +200,7 @@ class _DetailScreen extends State<DetailScreen> {
         child: RaisedButton(
           onPressed: alarmRunningOnPressed,
           color: Color.fromRGBO(232, 53, 83, 1.0),
-          child: Text("CANCEL ALARM",
-              style: TextStyle(color: Colors.white)),
+          child: Text("CANCEL ALARM", style: TextStyle(color: Colors.white)),
         ));
 
     final alarmPlayingButton = Padding(
@@ -209,8 +208,7 @@ class _DetailScreen extends State<DetailScreen> {
         child: RaisedButton(
           onPressed: alarmRunningOnPressed,
           color: Color.fromRGBO(232, 53, 83, 1.0),
-          child: Text("STOP ALARM",
-              style: TextStyle(color: Colors.white)),
+          child: Text("STOP ALARM", style: TextStyle(color: Colors.white)),
         ));
 
     final sparklineContent = Sparkline(
@@ -233,7 +231,10 @@ class _DetailScreen extends State<DetailScreen> {
             SizedBox(height: 10.0),
             bottomContentText,
             alarmButton,
-            Text('If you enable the alarm, when the server returns to the online state, the adventure call will sound.', textAlign: TextAlign.center,),
+            Text(
+              'If you enable the alarm, when the server returns to the online state, the adventure call will sound.',
+              textAlign: TextAlign.center,
+            ),
           ];
           break;
         case AlarmStatus.activated:
@@ -241,7 +242,10 @@ class _DetailScreen extends State<DetailScreen> {
             SizedBox(height: 10.0),
             CircularProgressIndicator(),
             alarmRunningButton,
-            Text('...wait for it...', textAlign: TextAlign.center,),
+            Text(
+              'When the server returns to the online state, the adventure call will sound.',
+              textAlign: TextAlign.center,
+            ),
           ];
           break;
         case AlarmStatus.playing:
@@ -250,7 +254,10 @@ class _DetailScreen extends State<DetailScreen> {
             SizedBox(height: 10.0),
             bottomContentText,
             alarmPlayingButton,
-            Text('Tap to stop the alarm', textAlign: TextAlign.center,),
+            Text(
+              'Tap to stop the alarm',
+              textAlign: TextAlign.center,
+            ),
           ];
           break;
         case AlarmStatus.disabled:
@@ -258,7 +265,7 @@ class _DetailScreen extends State<DetailScreen> {
           return <Widget>[
             sparklineContent,
             SizedBox(height: 10.0),
-            bottomContentText
+            bottomContentText,
           ];
           break;
       }
@@ -277,8 +284,14 @@ class _DetailScreen extends State<DetailScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: Column(
-        children: <Widget>[topContent, bottomContent],
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            child: Column(
+              children: <Widget>[topContent, bottomContent],
+            ),
+          );
+        },
       ),
     );
   }
@@ -286,7 +299,7 @@ class _DetailScreen extends State<DetailScreen> {
 
 enum AlarmStatus {
   disabled, // invisible
-  enabled,  // visible
+  enabled, // visible
   activated,
   playing
 }
