@@ -1,4 +1,4 @@
-package com.example.lineage2serversstatus;
+package info.gabrielsantos.lineage2serversstatus;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

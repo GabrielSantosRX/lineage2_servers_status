@@ -29,6 +29,7 @@
 build/
 
 # Android related
+key.properties
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
