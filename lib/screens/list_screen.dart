@@ -77,6 +77,7 @@ class _ListScreenState extends State<ListScreen> {
             child: Image.asset('assets/icon_appbar.png', fit: BoxFit.cover)),
         actions: <Widget>[
           PopupMenuButton<String>(
+            key: Key('AboutButton'),
             onSelected: showAboutScreen,
             itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
                   const PopupMenuItem<String>(
@@ -86,6 +87,7 @@ class _ListScreenState extends State<ListScreen> {
         ]);
 
     ListTile makeListTile(Server server) => ListTile(
+          key: Key('ListTileServers'),
           contentPadding:
               EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           leading: Container(
